@@ -7,53 +7,36 @@
 
 import UIKit
 
-struct Post: Codable {
-    let id: Int
-    let title: String
-}
-
-class ViewController: UIViewController, UITableViewDataSource {
-    
-    var fruits: [Post] = []
-    let tableView = UITableView()
+class ViewController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(tableView)
-        tableView.frame = view.bounds
-        tableView.dataSource = self
+        let hvc = HomeViewController()
+        hvc.title = "Home"
+        hvc.tabBarItem.image = UIImage(systemName: "house.fill")
         
-        fetchPost()
-    }
-    
-    func fetchPost() {
-        guard let url = URL(string: "https://jsonplaceholder.typicode.com/posts") else { return }
+        let svc = SettingViewController()
+        svc.title = "Setting"
+        svc.tabBarItem.image = UIImage(systemName: "gearshape.fill")
         
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let data = data {
-                do {
-                    let decoded = try JSONDecoder().decode([Post].self, from: data)
-                    DispatchQueue.main.async {
-                        self.fruits = decoded
-                        self.tableView.reloadData()
-                    }
-                } catch {
-                    print("Decoding error: \(error)")
-                }
-            }
-        }.resume()
+        let homeNav = UINavigationController(rootViewController: hvc)
+        let settingNav = UINavigationController(rootViewController: svc)
+        
+        self.viewControllers = [homeNav, settingNav]
     }
-    
-    // MARK: - TableView DataSource Methods
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return fruits.count
+}
+
+class HomeViewController: UIViewController{
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemRed
     }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        cell.textLabel?.text = fruits[indexPath.row].title
-        return cell
+}
+
+class SettingViewController: UIViewController{
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemYellow
     }
 }
