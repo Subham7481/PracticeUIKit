@@ -11,32 +11,25 @@ class ViewController: UITabBarController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         
-        let hvc = HomeViewController()
-        hvc.title = "Home"
-        hvc.tabBarItem.image = UIImage(systemName: "house.fill")
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        view.addGestureRecognizer(tapGesture)
         
-        let svc = SettingViewController()
-        svc.title = "Setting"
-        svc.tabBarItem.image = UIImage(systemName: "gearshape.fill")
+        let button = UIButton()
+        button.setTitle("Change Color", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .systemBlue
+        button.layer.cornerRadius = 10
+        button.frame = CGRect(x: 100, y: 200, width: 200, height: 50)
+        button.addTarget(self, action: #selector(handleTap), for: .touchUpInside)
+        view.addSubview(button)
         
-        let homeNav = UINavigationController(rootViewController: hvc)
-        let settingNav = UINavigationController(rootViewController: svc)
-        
-        self.viewControllers = [homeNav, settingNav]
     }
-}
-
-class HomeViewController: UIViewController{
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .systemRed
-    }
-}
-
-class SettingViewController: UIViewController{
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .systemYellow
+    @objc func handleTap(){
+        print("View Tapped!")
+        UIView.animate(withDuration: 0.3) {
+            self.view.backgroundColor = .systemGreen
+        }
     }
 }
