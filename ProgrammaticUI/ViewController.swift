@@ -7,29 +7,65 @@
 
 import UIKit
 
-class ViewController: UITabBarController {
+protocol ChildViewControllerDelegate: AnyObject{
+    func didEnterText(_ text: String)
+}
+
+class ChildViewController: UIViewController{
+    weak var delegate: ChildViewControllerDelegate?
+    
+    let textField = UITextField()
+    let sendButton = UIButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
-        view.addGestureRecognizer(tapGesture)
+        textField.frame = CGRect(x: 40, y: 100, width: 300, height: 40)
+        textField.borderStyle = .roundedRect
+        view.addSubview(textField)
         
-        let button = UIButton()
-        button.setTitle("Change Color", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .systemBlue
-        button.layer.cornerRadius = 10
-        button.frame = CGRect(x: 100, y: 200, width: 200, height: 50)
-        button.addTarget(self, action: #selector(handleTap), for: .touchUpInside)
-        view.addSubview(button)
+        sendButton.setTitle("Send", for: .normal)
+        sendButton.setTitleColor(.white, for: .normal)
+        sendButton.backgroundColor = .systemBlue
+        sendButton.frame = CGRect(x: 40, y: 160, width: 100, height: 40)
+        sendButton.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
+        view.addSubview(sendButton)
+    }
+    @objc func sendTapped(){
+        delegate?.didEnterText(textField.text ?? "")
+        dismiss(animated: true, completion: nil)
+    }
+}
+
+class ViewController: UIViewController, ChildViewControllerDelegate {
+    let label = UILabel()
+    let openButton = UIButton()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .white
+        title = "Programmatic UI"
+        
+        label.frame = CGRect(x: 40, y: 100, width: 300, height: 40)
+        label.text = "No data yet."
+        view.addSubview(label)
+        
+        openButton.setTitle("Open Child", for: .normal)
+        openButton.setTitleColor(.white, for: .normal)
+        openButton.backgroundColor = .systemGreen
+        openButton.frame = CGRect(x: 40, y: 160, width: 150, height: 40)
+        openButton.addTarget(self, action: #selector(openChildVC), for: .touchUpInside)
+        view.addSubview(openButton)
         
     }
-    @objc func handleTap(){
-        print("View Tapped!")
-        UIView.animate(withDuration: 0.3) {
-            self.view.backgroundColor = .systemGreen
-        }
+    @objc func openChildVC(){
+        let childvc = ChildViewController()
+        childvc.delegate = self
+        present(childvc, animated: true, completion: nil)
+    }
+    
+    func didEnterText(_ text: String) {
+        label.text = "Received: \(text)"
     }
 }
