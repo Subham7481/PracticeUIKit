@@ -58,6 +58,11 @@
 			path = ProgrammaticUIUITests;
 			sourceTree = "<group>";
 		};
+		0FE51A5B2DD5A7CE005484A3 /* Screenshots */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Screenshots;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +93,7 @@
 		0F5798E62DB8A5A7003B027E = {
 			isa = PBXGroup;
 			children = (
+				0FE51A5B2DD5A7CE005484A3 /* Screenshots */,
 				0F5798F12DB8A5A7003B027E /* ProgrammaticUI */,
 				0F5799082DB8A5A8003B027E /* ProgrammaticUITests */,
 				0F5799122DB8A5A8003B027E /* ProgrammaticUIUITests */,
@@ -122,6 +128,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				0F5798F12DB8A5A7003B027E /* ProgrammaticUI */,
+				0FE51A5B2DD5A7CE005484A3 /* Screenshots */,
 			);
 			name = ProgrammaticUI;
 			packageProductDependencies = (
