@@ -7,65 +7,43 @@
 
 import UIKit
 
-protocol ChildViewControllerDelegate: AnyObject{
-    func didEnterText(_ text: String)
-}
-
-class ChildViewController: UIViewController{
-    weak var delegate: ChildViewControllerDelegate?
-    
-    let textField = UITextField()
-    let sendButton = UIButton()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .white
-        
-        textField.frame = CGRect(x: 40, y: 100, width: 300, height: 40)
-        textField.borderStyle = .roundedRect
-        view.addSubview(textField)
-        
-        sendButton.setTitle("Send", for: .normal)
-        sendButton.setTitleColor(.white, for: .normal)
-        sendButton.backgroundColor = .systemBlue
-        sendButton.frame = CGRect(x: 40, y: 160, width: 100, height: 40)
-        sendButton.addTarget(self, action: #selector(sendTapped), for: .touchUpInside)
-        view.addSubview(sendButton)
-    }
-    @objc func sendTapped(){
-        delegate?.didEnterText(textField.text ?? "")
-        dismiss(animated: true, completion: nil)
-    }
-}
-
-class ViewController: UIViewController, ChildViewControllerDelegate {
+class ViewController: UIViewController {
     let label = UILabel()
-    let openButton = UIButton()
-    
+    let textField = UITextField()
+    let button = UIButton()
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         title = "Programmatic UI"
-        
-        label.frame = CGRect(x: 40, y: 100, width: 300, height: 40)
-        label.text = "No data yet."
+         
+        //Text field
+        label.text = "Enter data:"
+        label.frame = CGRect(x: 50, y: 300, width: 100, height: 40)
         view.addSubview(label)
         
-        openButton.setTitle("Open Child", for: .normal)
-        openButton.setTitleColor(.white, for: .normal)
-        openButton.backgroundColor = .systemGreen
-        openButton.frame = CGRect(x: 40, y: 160, width: 150, height: 40)
-        openButton.addTarget(self, action: #selector(openChildVC), for: .touchUpInside)
-        view.addSubview(openButton)
+        textField.placeholder = "Enter text here"
+        textField.frame = CGRect(x: 50, y: 350, width: 300, height: 50)
+        textField.borderStyle = .roundedRect
+        textField.layer.cornerRadius = 8
+        textField.layer.borderColor = UIColor.black.cgColor
+        view.addSubview(textField)
         
+       
+        button.setTitle("Click me!", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .systemBlue
+        button.titleLabel?.textAlignment = .center
+        button.frame = CGRect(x: 100, y: 450, width: 100, height: 40)
+        button.layer.cornerRadius = 10
+        
+        button.addTarget(self, action: #selector(navigate), for: .touchUpInside)
+        view.addSubview(button)
     }
-    @objc func openChildVC(){
-        let childvc = ChildViewController()
-        childvc.delegate = self
-        present(childvc, animated: true, completion: nil)
-    }
-    
-    func didEnterText(_ text: String) {
-        label.text = "Received: \(text)"
+    @objc func navigate(){
+        let secVC = SecondViewController()
+        secVC.receivedData = textField.text
+        navigationController?.pushViewController(secVC, animated: true)
+        
+       print("Navigation Done!")
     }
 }
