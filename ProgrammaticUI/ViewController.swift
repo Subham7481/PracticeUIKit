@@ -7,43 +7,56 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-    let label = UILabel()
-    let textField = UITextField()
-    let button = UIButton()
+class ViewController: UIViewController{
+    
+    let nameLabel = UILabel()
+    var collectionView: UICollectionView!
+    let editProfileButton = UIButton()
+    let logoutButton = UIButton()
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        title = "Programmatic UI"
-         
-        //Text field
-        label.text = "Enter data:"
-        label.frame = CGRect(x: 50, y: 300, width: 100, height: 40)
-        view.addSubview(label)
+        title = "Profile View"
         
-        textField.placeholder = "Enter text here"
-        textField.frame = CGRect(x: 50, y: 350, width: 300, height: 50)
-        textField.borderStyle = .roundedRect
-        textField.layer.cornerRadius = 8
-        textField.layer.borderColor = UIColor.black.cgColor
-        view.addSubview(textField)
+        var image = UIImage(systemName: "person.circle")
+        var imageView = UIImageView(image: image)
+        imageView.frame = CGRect(x: 150, y: 100, width: 100, height: 100)
+        view.addSubview(imageView)
         
-       
-        button.setTitle("Click me!", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.backgroundColor = .systemBlue
-        button.titleLabel?.textAlignment = .center
-        button.frame = CGRect(x: 100, y: 450, width: 100, height: 40)
-        button.layer.cornerRadius = 10
         
-        button.addTarget(self, action: #selector(navigate), for: .touchUpInside)
-        view.addSubview(button)
-    }
-    @objc func navigate(){
-        let secVC = SecondViewController()
-        secVC.receivedData = textField.text
-        navigationController?.pushViewController(secVC, animated: true)
+        nameLabel.text = "Subham Kumar"
+        nameLabel.textColor = .black
+        nameLabel.font = .systemFont(ofSize: 20)
+        nameLabel.textAlignment = .center
+        nameLabel.frame = CGRect(x: 120, y: 200, width: 150, height: 40)
+        view.addSubview(nameLabel)
         
-       print("Navigation Done!")
+        editProfileButton.setTitle("Edit Profile", for: .normal)
+        editProfileButton.backgroundColor = .systemBlue
+        editProfileButton.frame = CGRect(x: 100, y: 300, width: 150, height: 50)
+        editProfileButton.layer.cornerRadius = 10
+        view.addSubview(editProfileButton)
+        
+        logoutButton.setTitle("Edit Profile", for: .normal)
+        logoutButton.backgroundColor = .red
+        logoutButton.frame = CGRect(x: 100, y: 300, width: 150, height: 50)
+        logoutButton.layer.cornerRadius = 10
+        view.addSubview(logoutButton)
+        
+        let stackView = UIStackView(arrangedSubviews: [editProfileButton, logoutButton])
+        stackView.axis = .horizontal
+        stackView.spacing = 16
+        stackView.distribution = .fillEqually
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(stackView)
+        
+        NSLayoutConstraint.activate([
+            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 300),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
+            stackView.heightAnchor.constraint(equalToConstant: 50)
+        ])
     }
 }
