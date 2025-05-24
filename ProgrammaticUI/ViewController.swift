@@ -7,56 +7,64 @@
 
 import UIKit
 
-class ViewController: UIViewController{
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
     
-    let nameLabel = UILabel()
-    var collectionView: UICollectionView!
-    let editProfileButton = UIButton()
-    let logoutButton = UIButton()
+    let tableView = UITableView()
+    let textLabel = UILabel()
+    let textField = UITextField()
+    var tasks: [String] = []
+    let button = UIButton(type: .system)
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return tasks.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.textLabel?.text = tasks[indexPath.row]
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete{
+            tasks.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        title = "Profile View"
+        title = "Todo app"
         
-        var image = UIImage(systemName: "person.circle")
-        var imageView = UIImageView(image: image)
-        imageView.frame = CGRect(x: 150, y: 100, width: 100, height: 100)
-        view.addSubview(imageView)
+        tableView.frame = view.bounds
+        tableView.dataSource = self
+        tableView.delegate = self
+        view.addSubview(tableView)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         
+        textLabel.text = "Enter the task:"
+        textLabel.frame = CGRect(x: 50, y: 550, width: 250, height: 40)
+        view.addSubview(textLabel)
         
-        nameLabel.text = "Subham Kumar"
-        nameLabel.textColor = .black
-        nameLabel.font = .systemFont(ofSize: 20)
-        nameLabel.textAlignment = .center
-        nameLabel.frame = CGRect(x: 120, y: 200, width: 150, height: 40)
-        view.addSubview(nameLabel)
+        textField.placeholder = "Enter the task:"
+        textField.borderStyle = .roundedRect
+        textField.frame = CGRect(x: 50, y: 600, width: 300, height: 40)
+        textField.autocorrectionType = .no
+        view.addSubview(textField)
         
-        editProfileButton.setTitle("Edit Profile", for: .normal)
-        editProfileButton.backgroundColor = .systemBlue
-        editProfileButton.frame = CGRect(x: 100, y: 300, width: 150, height: 50)
-        editProfileButton.layer.cornerRadius = 10
-        view.addSubview(editProfileButton)
-        
-        logoutButton.setTitle("Edit Profile", for: .normal)
-        logoutButton.backgroundColor = .red
-        logoutButton.frame = CGRect(x: 100, y: 300, width: 150, height: 50)
-        logoutButton.layer.cornerRadius = 10
-        view.addSubview(logoutButton)
-        
-        let stackView = UIStackView(arrangedSubviews: [editProfileButton, logoutButton])
-        stackView.axis = .horizontal
-        stackView.spacing = 16
-        stackView.distribution = .fillEqually
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        view.addSubview(stackView)
-        
-        NSLayoutConstraint.activate([
-            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 300),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40),
-            stackView.heightAnchor.constraint(equalToConstant: 50)
-        ])
+        button.setTitle("Add task", for: .normal)
+        button.frame = CGRect(x: 100, y: 700, width: 250, height: 50)
+        button.backgroundColor = .green
+        button.titleLabel?.textColor = .white
+        button.layer.cornerRadius = 10
+        button.addTarget(self, action: #selector(addTask), for: .touchUpInside)
+        view.addSubview(button)
+    }
+    @objc func addTask(){
+        guard let newTask = textField.text, !newTask.isEmpty else { return}
+        tasks.append(newTask)
+        tableView.reloadData()
+        textField.text = ""
     }
 }
