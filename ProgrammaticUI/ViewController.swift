@@ -7,64 +7,126 @@
 
 import UIKit
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
-    
-    let tableView = UITableView()
-    let textLabel = UILabel()
-    let textField = UITextField()
-    var tasks: [String] = []
-    let button = UIButton(type: .system)
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tasks.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = tasks[indexPath.row]
-        return cell
-    }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete{
-            tasks.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        }
-    }
+class ViewController: UIViewController{
+    let nameField = UITextField()
+    let emailField = UITextField()
+    let passwordField = UITextField()
+    let confirmPasswordField = UITextField()
+    let ageField = UITextField()
+    let addressField = UITextField()
+    let submitButton = UIButton(type: .roundedRect)
+    let errorMessage = UILabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        title = "Todo app"
+        title = "Practice"
         
-        tableView.frame = view.bounds
-        tableView.dataSource = self
-        tableView.delegate = self
-        view.addSubview(tableView)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        nameField.placeholder = "Enter name:"
+        nameField.borderStyle = .roundedRect
+        nameField.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(nameField)
         
-        textLabel.text = "Enter the task:"
-        textLabel.frame = CGRect(x: 50, y: 550, width: 250, height: 40)
-        view.addSubview(textLabel)
+        emailField.placeholder = "Enter email:"
+        emailField.borderStyle = .roundedRect
+        emailField.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(emailField)
         
-        textField.placeholder = "Enter the task:"
-        textField.borderStyle = .roundedRect
-        textField.frame = CGRect(x: 50, y: 600, width: 300, height: 40)
-        textField.autocorrectionType = .no
-        view.addSubview(textField)
+        passwordField.placeholder = "Enter password:"
+        passwordField.borderStyle = .roundedRect
+        passwordField.isSecureTextEntry = true
+        passwordField.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(passwordField)
         
-        button.setTitle("Add task", for: .normal)
-        button.frame = CGRect(x: 100, y: 700, width: 250, height: 50)
-        button.backgroundColor = .green
-        button.titleLabel?.textColor = .white
-        button.layer.cornerRadius = 10
-        button.addTarget(self, action: #selector(addTask), for: .touchUpInside)
-        view.addSubview(button)
+        confirmPasswordField.placeholder = "Enter password again:"
+        confirmPasswordField.borderStyle = .roundedRect
+        confirmPasswordField.isSecureTextEntry = true
+        confirmPasswordField.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(confirmPasswordField)
+        
+        ageField.placeholder = "Enter age:"
+        ageField.borderStyle = .roundedRect
+        ageField.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(ageField)
+        
+        addressField.placeholder = "Enter address:"
+        addressField.borderStyle = .roundedRect
+        addressField.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(addressField)
+        
+        submitButton.setTitle("Submit", for: .normal)
+        submitButton.backgroundColor = .green
+        submitButton.titleLabel?.textColor = .white
+        submitButton.layer.cornerRadius = 10
+        submitButton.addTarget(self, action: #selector(login), for: .touchUpInside)
+        submitButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(submitButton)
+        
+        errorMessage.textColor = .red
+        errorMessage.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(errorMessage)
+        
+        
+        NSLayoutConstraint.activate([
+            nameField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 80),
+            nameField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            nameField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            nameField.heightAnchor.constraint(equalToConstant: 40),
+            
+            emailField.topAnchor.constraint(equalTo: nameField.bottomAnchor, constant: 20),
+            emailField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            emailField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            emailField.heightAnchor.constraint(equalToConstant: 40),
+            
+            passwordField.topAnchor.constraint(equalTo: emailField.bottomAnchor, constant: 20),
+            passwordField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            passwordField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            passwordField.heightAnchor.constraint(equalToConstant: 40),
+            
+            confirmPasswordField.topAnchor.constraint(equalTo: passwordField.bottomAnchor, constant: 20),
+            confirmPasswordField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            confirmPasswordField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            confirmPasswordField.heightAnchor.constraint(equalToConstant: 40),
+            
+            ageField.topAnchor.constraint(equalTo: confirmPasswordField.bottomAnchor, constant: 20),
+            ageField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            ageField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            ageField.heightAnchor.constraint(equalToConstant: 40),
+            
+            addressField.topAnchor.constraint(equalTo: ageField.bottomAnchor, constant: 20),
+            addressField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            addressField.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            addressField.heightAnchor.constraint(equalToConstant: 40),
+            
+            submitButton.topAnchor.constraint(equalTo: addressField.bottomAnchor, constant: 60),
+            submitButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            submitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            submitButton.heightAnchor.constraint(equalToConstant: 40),
+            submitButton.widthAnchor.constraint(equalToConstant: 330),
+            
+            errorMessage.topAnchor.constraint(equalTo: submitButton.bottomAnchor, constant: 10),
+            errorMessage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+
+        ])
     }
-    @objc func addTask(){
-        guard let newTask = textField.text, !newTask.isEmpty else { return}
-        tasks.append(newTask)
-        tableView.reloadData()
-        textField.text = ""
+    func validate(){
+        errorMessage.text = ""
+        if(nameField.text?.isEmpty ?? true || emailField.text?.isEmpty ?? true || passwordField.text?.isEmpty ?? true || confirmPasswordField.text?.isEmpty ?? true || ageField.text?.isEmpty ?? true || addressField.text?.isEmpty ?? true){
+            errorMessage.text = "Please fill all the fields."
+        }
+        
+        if !(emailField.text?.contains("@") == true && emailField.text?.contains(".") == true) {
+            errorMessage.text = "Invalid email"
+        }
+        
+        if let password = passwordField.text,
+           let confirmPassword = confirmPasswordField.text,
+           (password.count < 8 || confirmPassword.count < 8) {
+            errorMessage.text = "Enter password more than seven characters."
+        }
+    }
+    
+    @objc func login(){
+        navigationController?.pushViewController(SecondViewController(), animated: true)
     }
 }
